@@ -1,107 +1,64 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  Button,
-  Switch,
-} from "react-native";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import ProductCard from "./components/ProductCard";
+import HomeScreen from "./screens/HomeScreen";
+import BlogDetail from "./screens/BlogDetail";
+import ProductDetail from "./screens/ProductDetail";
+
+const Stack = createNativeStackNavigator();
+
+const products = [
+  {
+    id: 1,
+    title: "Nova X1 Earbuds",
+    description:
+      "Noise-cancelling earbuds met spatial audio en ultra-low latency.",
+    price: "EUR 179",
+    details:
+      "De Nova X1 combineert adaptive noise cancelling, transparantiemodus en een batterijduur tot 32 uur met case. Ideaal voor onderweg, calls en mobiel gamen.",
+    image: require("./assets/ring.png"),
+  },
+  {
+    id: 2,
+    title: "Pulse Watch GT",
+    description:
+      "Slimme smartwatch met AMOLED-display, GPS en health tracking.",
+    price: "EUR 249",
+    details:
+      "De Pulse Watch GT geeft meldingen, hartslag, slaapinzichten en workout-modes in een strak horloge dat vlot synchroniseert met je smartphone.",
+    image: require("./assets/ring.png"),
+  },
+];
 
 export default function App() {
-  const [search, setSearch] = useState("");
-  const [isEnabled, setIsEnabled] = useState(false);
-
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Snow & Ski Shop</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Zoek snowboard of ski..."
-        value={search}
-        onChangeText={setSearch}
-      />
-
-      <View style={styles.switchContainer}>
-        <Text>Alleen aanbiedingen</Text>
-        <Switch
-          value={isEnabled}
-          onValueChange={() => setIsEnabled(!isEnabled)}
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: "#07111f" },
+          headerTintColor: "#f5fbff",
+          headerShadowVisible: false,
+          contentStyle: { backgroundColor: "#07111f" },
+        }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          initialParams={{ products }}
+          options={{ title: "Volt Market" }}
         />
-      </View>
-
-      <Button title="Filter producten" onPress={() => alert("Filter actief")} />
-
-      <View style={styles.products}>
-        <ProductCard
-          title="Burton Snowboard"
-          description="Perfect voor freestyle riders"
-          price="499"
-          image="https://images.unsplash.com/photo-1517649763962-0c623066013b"
+        <Stack.Screen
+          name="Details"
+          component={ProductDetail}
+          options={{ title: "Device Details" }}
         />
-
-        <ProductCard
-          title="Atomic Skis"
-          description="Ideaal voor piste en snelheid"
-          price="699"
-          image="https://images.unsplash.com/photo-1516569422860-11f0b0c1b63d"
+        <Stack.Screen
+          name="BlogDetail"
+          component={BlogDetail}
+          options={{ title: "Blog" }}
         />
-
-        <ProductCard
-          title="Nitro Snowboard"
-          description="All-mountain performance"
-          price="549"
-          image="https://images.unsplash.com/photo-1603575448360-153f093fd0f5"
-        />
-
-        <ProductCard
-          title="Salomon Skis"
-          description="Perfect voor beginners"
-          price="399"
-          image="https://images.unsplash.com/photo-1519681393784-d120267933ba"
-        />
-      </View>
-    </ScrollView>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0f172a",
-    padding: 20,
-  },
-
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "white",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-
-  input: {
-    backgroundColor: "white",
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 15,
-  },
-
-  switchContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-
-  products: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-});
