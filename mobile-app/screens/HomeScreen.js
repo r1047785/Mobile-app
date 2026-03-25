@@ -15,6 +15,29 @@ const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
+  useEffect(() => {
+    fetch("https://api.webflow.com/v2/sites/:site_id/products", {
+      headers: {
+        Authorization:
+          "Bearer 15f5cc4a3d900c636f9056e192ae2d4d1faac7747ed954c777cd936c08fa9060",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) =>
+        setProducts(
+          data.items.map((item) => ({
+            id: item.product.id,
+            title: item.product.fieldData.name,
+            subtitle: item.product.fieldData.description,
+            price: (item.skus[0]?.fieldData?.price?.value || 0) / 100,
+            image: {
+              uri: item.skus[0]?.fieldData?.["main-image"]?.url,
+            },
+          })),
+        ),
+      )
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Our offer</Text>
